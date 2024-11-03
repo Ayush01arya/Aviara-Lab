@@ -61,16 +61,6 @@ Set Up Virtual Environment
 
 ```bash
 
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-
-Install Requirements
-
-```bash
-
-  pip install -r requirements.txt
-Environment Variables
-```bash
 ## Screen Recording
 
 You can watch a screen recording of the application in action [here](screen_record/screen%20record.mp4).
