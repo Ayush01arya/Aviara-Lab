@@ -90,7 +90,7 @@
 
         /* Question section styling */
         .question-section {
-            display: flex;
+            display: none; /* Initially hidden */
             flex-direction: column; /* Stack elements vertically */
             gap: 0.5em; /* Space between elements */
         }
@@ -132,14 +132,14 @@
     <div class="container">
         <h1>Chat with PDF</h1>
 
-        <div class="upload-section">
+        <div class="upload-section" id="uploadSection">
             <label for="pdfFiles" class="file-label">Upload PDF Files</label>
             <input type="file" id="pdfFiles" multiple>
             <button onclick="handleUpload()" class="upload-button">Upload PDF</button>
             <div class="spinner" id="spinner"></div> <!-- Spinner element -->
         </div>
 
-        <div class="question-section">
+        <div class="question-section" id="questionSection">
             <input type="text" id="question" placeholder="Ask a question" class="question-input">
             <button onclick="handleQuestion()" class="ask-button">Ask</button>
         </div>
@@ -148,74 +148,84 @@
     </div>
 
     <script>
-       const apiBaseUrl = "http://127.0.0.1:5000";  // Adjust the base URL if necessary
-function showSpinner() {
-        document.getElementById("spinner").style.display = "block";
-    }
+        const apiBaseUrl = "http://127.0.0.1:5000";  // Adjust the base URL if necessary
 
-    // Function to hide the spinner
-    function hideSpinner() {
-        document.getElementById("spinner").style.display = "none";
-    }
-// Function to handle PDF upload
-async function uploadPDF(files) {
-showSpinner();
-    const formData = new FormData();
-    files.forEach(file => formData.append("files", file));
+        function showSpinner() {
+            document.getElementById("spinner").style.display = "block";
+        }
 
-    try {
-        const response = await fetch(`${apiBaseUrl}/upload-pdf`, {
-            method: 'POST',
-            body: formData
-        });
+        // Function to hide the spinner
+        function hideSpinner() {
+            document.getElementById("spinner").style.display = "none";
+        }
 
-        const data = await response.json();
-        hideSpinner();
-        document.getElementById("response").textContent = data.message || "Files uploaded and processed!";
-    } catch (error) {
-        console.error("Error uploading PDF files:", error);
-        document.getElementById("response").textContent = "Error uploading files. Please try again.";
-    }
-}
+        // Function to handle PDF upload
+        async function uploadPDF(files) {
+            showSpinner();
+            const formData = new FormData();
+            files.forEach(file => formData.append("files", file));
 
-// Function to handle question submission
-async function askQuestion(question) {
-    try {
-        const response = await fetch(`${apiBaseUrl}/ask-question`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ question })
-        });
+            try {
+                const response = await fetch(`${apiBaseUrl}/upload-pdf`, {
+                    method: 'POST',
+                    body: formData
+                });
 
-        const data = await response.json();
-        document.getElementById("response").textContent = data.reply || "No reply available.";
-    } catch (error) {
-        console.error("Error asking question:", error);
-        document.getElementById("response").textContent = "Error fetching answer. Please try again.";
-    }
-}
+                const data = await response.json();
+                hideSpinner();
+                document.getElementById("response").textContent = data.message || "Files uploaded and processed!";
 
-// Button handlers
-function handleUpload() {
-    const files = Array.from(document.getElementById('pdfFiles').files);
-    if (files.length > 0) {
-        uploadPDF(files);
-    } else {
-        document.getElementById("response").textContent = "Please select at least one PDF file.";
-    }
-}
+                // Show question section after successful upload
+                document.getElementById("uploadSection").style.display = "none";
+                document.getElementById("questionSection").style.display = "flex"; // Show the question section
+            } catch (error) {
+                console.error("Error uploading PDF files:", error);
+                hideSpinner();
+                document.getElementById("response").textContent = "Error uploading files. Please try again.";
+            }
+        }
 
-function handleQuestion() {
-    const question = document.getElementById('question').value;
-    if (question.trim()) {
-        askQuestion(question);
-    } else {
-        document.getElementById("response").textContent = "Please enter a question.";
-    }
-}
+        // Function to handle question submission
+        async function askQuestion(question) {
 
+            try {
+             showSpinner();
+                const response = await fetch(`${apiBaseUrl}/ask-question`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ question })
+                });
+
+                const data = await response.json();
+                hideSpinner();
+                document.getElementById("response").textContent = data.reply || "No reply available.";
+            } catch (error) {
+                console.error("Error asking question:", error);
+                hideSpinner();
+                document.getElementById("response").textContent = "Error fetching answer. Please try again.";
+            }
+        }
+
+        // Button handlers
+        function handleUpload() {
+            const files = Array.from(document.getElementById('pdfFiles').files);
+            if (files.length > 0) {
+                uploadPDF(files);
+            } else {
+                document.getElementById("response").textContent = "Please select at least one PDF file.";
+            }
+        }
+
+        function handleQuestion() {
+            const question = document.getElementById('question').value;
+            if (question.trim()) {
+                askQuestion(question);
+            } else {
+                document.getElementById("response").textContent = "Please enter a question.";
+            }
+        }
     </script>
 </body>
 </html>
