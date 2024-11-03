@@ -59,7 +59,6 @@ This application allows users to:
    cd your-repository
 Set Up Virtual Environment
 
-```bash
 
 ## Screen Recording
 
