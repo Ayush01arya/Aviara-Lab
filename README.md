@@ -70,4 +70,7 @@ Install Requirements
 
   pip install -r requirements.txt
 Environment Variables
+```bash
+## Screen Recording
 
+You can watch a screen recording of the application in action [here](screen_record/screen%20record.mp4).
