@@ -62,4 +62,4 @@ Set Up Virtual Environment
 
 ## Screen Recording
 
-You can watch a screen recording of the application in action [here](screen_record/screen%20record.mp4).
+You can watch a screen recording of the application in action [here](https://github.com/Ayush01arya/Aviara-Lab/raw/main/screen_record/screen%20record.mp4).
